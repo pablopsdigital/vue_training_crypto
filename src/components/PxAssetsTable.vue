@@ -23,14 +23,16 @@
           <img
             v-bind:src="`https://static.coincap.io/assets/icons/${a.symbol.toLowerCase()}@2x.png`"
             v-bind:alt="a.name"
-            class="w-10"
+            class="w-6 h-6"
           />
         </td>
         <td class="font-bold"># {{ a.rank }}</td>
         <td>{{ a.name }}</td>
-        <td>{{ a.priceUsd }}</td>
-        <td>{{ a.marketCapUsd }}</td>
-        <td>{{ a.changePercent24Hr }}</td>
+        <td>{{ a.priceUsd | dollar }}</td>
+        <td>{{ a.marketCapUsd | dollar }}</td>
+        <td
+          v-bind:class="a.changePercent24Hr.includes('-') ? 'text-red-600':'text-green-600'"
+        >{{ a.changePercent24Hr | percent }}</td>
         <td class="hidden sm:block"></td>
       </tr>
     </tbody>
