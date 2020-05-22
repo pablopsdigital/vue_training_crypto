@@ -1,20 +1,18 @@
 <template>
   <main>
     <px-header></px-header>
-    <px-assets-table></px-assets-table>
+    <router-view class="container px-5 sm:px-20 py-20 flex justify-center"></router-view>
   </main>
 </template>
 
 <script>
 //Importar componentes
 import PxHeader from "@/components/PxHeader";
-import PxAssetsTable from "@/components/PxAssetsTable";
 
 export default {
-  name: "App",
+  name: "app",
   components: {
-    PxHeader,
-    PxAssetsTable
+    PxHeader
   }
 };
 </script>
