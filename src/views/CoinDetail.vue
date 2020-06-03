@@ -1,6 +1,9 @@
 <template>
   <div class="flex-col">
-    <template v-if="asset.id">
+    <div class="flex justify-center">
+      <bounce-loader :loading="isLoading" :color="'#68d391'" :size="100"></bounce-loader>
+    </div>
+    <template v-if="!isLoading">
       <div class="flex flex-col sm:flex-row justify-around items-center">
         <div class="flex flex-col items-center">
           <img
@@ -20,7 +23,7 @@
           <ul>
             <li class="flex justify-between">
               <b class="text-gray-600 mr-10 uppercase">Ranking</b>
-              <span>#{{ asset.rank }}</span>
+              <span># {{ asset.rank }}</span>
             </li>
             <li class="flex justify-between">
               <b class="text-gray-600 mr-10 uppercase">Precio actual</b>
@@ -59,41 +62,48 @@
               />
             </label>
           </div>
-
-          <span class="text-xl"></span>
         </div>
       </div>
+      <line-chart
+        class="my-10"
+        :colors="['orange']"
+        :min="min"
+        :max="max"
+        :data="history.map(h => [h.date, parseFloat(h.priceUsd).toFixed(2)])"
+      />
     </template>
   </div>
 </template>
 
 <script>
+//importar métodos
 import api from "@/api";
 
 export default {
   name: "CoinDetail",
-
   data() {
     return {
+      isLoading: false,
       asset: {},
       history: []
     };
   },
-
   computed: {
     min() {
+      //Formatear el valor minimo
+      //..por cada elemento del array
       return Math.min(
         ...this.history.map(h => parseFloat(h.priceUsd).toFixed(2))
       );
     },
-
     max() {
+      //Formatear el valor máximo
       return Math.max(
         ...this.history.map(h => parseFloat(h.priceUsd).toFixed(2))
       );
     },
-
     avg() {
+      //Formatear el valor medio
       return Math.abs(
         ...this.history.map(h => parseFloat(h.priceUsd).toFixed(2))
       );
@@ -101,27 +111,28 @@ export default {
   },
 
   created() {
+    //Al crear llamamos al metodo para getCoin para cargar los datos de la API
     this.getCoin();
   },
-
   methods: {
+    //Función para traer la información de la api
     getCoin() {
+      //Consultamos el router para optener el id
       const id = this.$route.params.id;
 
-      Promise.all([api.getAsset(id), api.getAssetHistory(id)]).then(
-        ([asset, history]) => {
+      //Si está cargada
+      this.isLoading = true;
+
+      //Promesa para ejecutar diferentes métodos de api
+      Promise.all([api.getAsset(id), api.getAssetHistory(id)])
+        .then(([asset, history]) => {
           this.asset = asset;
           this.history = history;
-        }
-      );
+        })
+        .finally(() => (this.isLoading = false));
     }
   }
 };
 </script>
 
-<style scoped>
-td {
-  padding: 10px;
-  text-align: center;
-}
-</style>
+<style></style>
