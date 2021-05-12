@@ -10,7 +10,7 @@
   "dependencies": {
     "-": "0.0.1",
     "@saeris/vue-spinners": "^1.0.8",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "core-js": "^3.6.4",
     "numeral": "^2.0.6",
     "s": "^1.0.0",
